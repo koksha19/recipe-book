@@ -1,19 +1,17 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
-dotenv.config();
+import recipeRoutes from './routes/recipe.routes';
 
-import { connectDb } from './utils/connectDb';
+dotenv.config();
 
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-connectDb();
+app.use(express.json());
+app.use('/api', recipeRoutes);
 
-mongoose.connection.once('open', () => {
-  app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`);
-  });
+app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
 });
