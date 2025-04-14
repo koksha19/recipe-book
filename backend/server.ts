@@ -1,19 +1,24 @@
-import express from 'express';
-import mongoose from 'mongoose';
+import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 
-dotenv.config();
+import recipeRoutes from './routes/recipe.routes';
 
-import { connectDb } from './utils/connectDb';
+dotenv.config();
 
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-connectDb();
+app.use(express.json());
+app.use('/api', recipeRoutes);
 
-mongoose.connection.once('open', () => {
-  app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`);
-  });
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+  const status = error.statusCode || 500;
+  const message = error.message;
+  const data = error.data;
+  res.status(status).json({ message: message, statusCode: status, data: data });
+});
+
+app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
 });
