@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 import recipeRoutes from './routes/recipe.routes';
 
@@ -9,6 +10,7 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(express.json());
 app.use('/api', recipeRoutes);
 
